@@ -7,6 +7,22 @@ export const userRequest = () => ({
     type:USER_REQUEST
 });
 
+export const USER_REQUEST_ACTION = 'USER_REQUEST_ACTION';
+export const userRequestAction = () => ({
+    type:USER_REQUEST_ACTION
+});
+
+export const USER_REQUEST_ACTION_SUCCESS = 'USER_REQUEST_ACTION_SUCCESS';
+export const userRequestActionSuccess = () => ({
+    type:USER_REQUEST_ACTION_SUCCESS
+});
+
+export const USER_REQUEST_ACTION_ERROR = 'USER_REQUEST_ACTION_ERROR';
+export const userRequestActionError = (error) => ({
+    type:USER_REQUEST_ACTION_ERROR,
+    error
+});
+
 export const GET_USER_SUCCESS = 'GET_USER_SUCCESS';
 export const getUserSuccess = (users) => ({
     type:GET_USER_SUCCESS,
@@ -62,5 +78,27 @@ export const getUsersAsync = async (authToken) => {
     }
     catch(e){
         console.log('error getting users ',e);
+    }
+};
+
+export const updateUser = (email,user) => async (dispatch,getState) => {
+    dispatch(userRequestAction());
+    const authToken = getState().auth.authToken;
+    try{
+        let res = await fetch(`${API_BASE_URL}/users/${email}`,{
+            method:'PUT',
+            headers:{
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authToken}`
+            },
+            body:JSON.stringify(user)
+        });
+        res = normalizeResponseErrors(res);
+        res = res.json();
+        dispatch(userRequestActionSuccess());
+    }
+    catch(e){
+        dispatch(userRequestActionError(e));
+        throw e;
     }
 };

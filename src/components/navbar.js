@@ -83,11 +83,16 @@ export class TopNav extends React.Component{
         return links;
     }
 
-    changeRole(event,role){
+    async changeRole(event,role){
         event.preventDefault();
-        this.setState({
-            selectedRole:role
-        });
+        try{
+            this.setState({
+                selectedRole:role
+            });
+        }
+        catch(e){
+            console.warn('Error setting role: ',e);
+        }
     }
     
     render(){
