@@ -80,11 +80,11 @@ function App(props){
   
 
   //let token = useGoogleRefresh();
-
+  let nav = props.currentUser ? (<TopNav />) : null
   let renderContent = initialLoad ?
      (<div className="App"></div>) : (
       <div className="App">
-        <TopNav />
+        {nav}
         <Route exact path="/"  render={(props) => (
             <LandingPage />)
           }/>
@@ -131,6 +131,7 @@ function App(props){
 }
 
 const mapStateToProps = state => ({
-  testMode:state.auth.testMode
+  testMode:state.auth.testMode,
+  currentUser: state.auth.currentUser
 });
 export default withRouter(connect(mapStateToProps)(App));

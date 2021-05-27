@@ -35,9 +35,11 @@ export class TopNav extends React.Component{
     }
 
     componentDidMount(){
-        this.setState({
-            selectedRole:this.props.currentUser.level
-        });
+        if(this.props.currentUser){
+            this.setState({
+                selectedRole:this.props.currentUser.level
+            });
+        }
     }
     
     logout = (event) => {
@@ -87,7 +89,6 @@ export class TopNav extends React.Component{
             selectedRole:role
         });
     }
-
     
     render(){
         let selectedRole = this.state.selectedRole || this.state.selectedRole === 0 ? this.state.roles[this.state.selectedRole].name : null;  
