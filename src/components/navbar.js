@@ -5,6 +5,7 @@ import {logoutSession} from '../actions/authActions';
 import { Navbar,Nav,Button, NavDropdown,DropdownButton,Dropdown } from 'react-bootstrap';
 import {possibleLinks} from '../config';
 import './styles/navbar.css';
+import { updateUser } from '../actions/userActions';
 //add logout functions
 export class TopNav extends React.Component{
     //should change this to state
@@ -48,7 +49,7 @@ export class TopNav extends React.Component{
     }
 
     getNavLinks = () => {
-        //console.log(this.props.currentUser);
+        console.log(this.props.currentUser);
         let {level} = this.props.currentUser;
         let links = [];
         for(let i = 0;i < this.possibleLinks.length;i++){
@@ -86,6 +87,9 @@ export class TopNav extends React.Component{
     async changeRole(event,role){
         event.preventDefault();
         try{
+            await this.props.dispatch(updateUser(this.props.currentUser.username,{
+                level:role
+            }));
             this.setState({
                 selectedRole:role
             });
@@ -99,6 +103,7 @@ export class TopNav extends React.Component{
         let selectedRole = this.state.selectedRole || this.state.selectedRole === 0 ? this.state.roles[this.state.selectedRole].name : null;  
         this.displayNav = this.props.currentUser != null ? true : false;
         let links = this.props.currentUser != null ? this.getNavLinks() : [];
+        console.log('rendered',links);
         const brand = this.props.testMode ? 'TEST' : 'EGMS';
         return(
            <div className={this.displayNav ? '' : 'hidden'}>

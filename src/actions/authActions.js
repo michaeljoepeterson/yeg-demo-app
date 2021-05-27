@@ -99,9 +99,11 @@ export const enableTestMode = () => (dispatch) =>{
     dispatch(testEnable());
 }
 
-export const googleSignIn = () => async (dispatch) => {
+export const googleSignIn = (bypass) => async (dispatch) => {
     try{
-        await fb.signInWithGoogle();
+        if(!bypass){
+            await fb.signInWithGoogle();
+        }
         const token = await fb.getToken();
         //console.log('google auth data: ',userData);
         let res = await fetch(`${API_BASE_URL}/auth/login`,{

@@ -1,5 +1,6 @@
 import {normalizeResponseErrors} from './utils';
 import {API_BASE_URL} from '../config';
+import {googleSignIn} from './authActions';
 //import {loadAuthToken} from '../local-storage';
 //use this as generic student request
 export const USER_REQUEST = 'USER_REQUEST';
@@ -84,6 +85,9 @@ export const getUsersAsync = async (authToken) => {
 export const updateUser = (email,user) => async (dispatch,getState) => {
     dispatch(userRequestAction());
     const authToken = getState().auth.authToken;
+    let userData = {
+        user
+    };
     try{
         let res = await fetch(`${API_BASE_URL}/users/${email}`,{
             method:'PUT',
@@ -91,10 +95,11 @@ export const updateUser = (email,user) => async (dispatch,getState) => {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${authToken}`
             },
-            body:JSON.stringify(user)
+            body:JSON.stringify(userData)
         });
         res = normalizeResponseErrors(res);
         res = res.json();
+        await dispatch(googleSignIn(true));
         dispatch(userRequestActionSuccess());
     }
     catch(e){
