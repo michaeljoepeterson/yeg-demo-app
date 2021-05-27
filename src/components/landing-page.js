@@ -6,7 +6,7 @@ import { withRouter} from 'react-router-dom';
 import {refreshAuthToken,enableTestMode} from '../actions/authActions';
 
 export function LandingPage(props){
-    const title = 'Edmonton Guitar';
+    const title = 'Demo Guitar App';
     if(props.currentUser){
         return <Redirect to='/create-lesson'/>;
     }

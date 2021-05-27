@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {logoutSession} from '../actions/authActions';
-import { Navbar,Nav,Button, NavDropdown } from 'react-bootstrap';
+import { Navbar,Nav,Button, NavDropdown,DropdownButton,Dropdown } from 'react-bootstrap';
 import {possibleLinks} from '../config';
 import './styles/navbar.css';
 //add logout functions
@@ -12,9 +12,33 @@ export class TopNav extends React.Component{
 
     constructor(props) {
         super(props);
+        console.log(props);
         this.displayNav = false;
         this.possibleLinks = possibleLinks;
-      }
+        this.state = {
+            roles:[
+                {
+                    value:0,
+                    name:'Super Admin'
+                },
+                {
+                    value:1,
+                    name:'Admin'
+                },
+                {
+                    value:2,
+                    name:'Teacher'
+                },
+            ],
+            selectedRole:null
+        }
+    }
+
+    componentDidMount(){
+        this.setState({
+            selectedRole:this.props.currentUser.level
+        });
+    }
     
     logout = (event) => {
         event.preventDefault();
@@ -57,7 +81,16 @@ export class TopNav extends React.Component{
         return links;
     }
 
+    changeRole(event,role){
+        event.preventDefault();
+        this.setState({
+            selectedRole:role
+        });
+    }
+
+    
     render(){
+        let selectedRole = this.state.selectedRole || this.state.selectedRole === 0 ? this.state.roles[this.state.selectedRole].name : null;  
         this.displayNav = this.props.currentUser != null ? true : false;
         let links = this.props.currentUser != null ? this.getNavLinks() : [];
         const brand = this.props.testMode ? 'TEST' : 'EGMS';
@@ -70,6 +103,15 @@ export class TopNav extends React.Component{
                         <Nav className="mr-auto">
                             {links}
                         </Nav>
+                        <DropdownButton variant="outline-light" className="role-select" title={selectedRole}>
+                            {this.state.roles.map(role => {
+                                return (
+                                    <Dropdown.Item onClick={(e) => this.changeRole(e,role.value)}>
+                                        {role.name}
+                                    </Dropdown.Item>
+                                );
+                            })}
+                        </DropdownButton>
                         <Button variant="outline-light" onClick={this.logout}>Logout</Button>
                     </Navbar.Collapse>
                 </Navbar>

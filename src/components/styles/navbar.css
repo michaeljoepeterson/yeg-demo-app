@@ -11,3 +11,7 @@ a{
 .navbar{
     margin-bottom:40px;
 }
+
+.role-select{
+    margin: 0.4em 1em;
+}
